@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: php-app
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/var/www
+      - sqlite-data:/var/www/storage
+    command: >
+      sh -c "php -S 0.0.0.0:8000 -t public"
+
+volumes:
+  sqlite-data:
