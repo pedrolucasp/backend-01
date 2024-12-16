@@ -12,4 +12,12 @@ class HelloController {
 
     echo Template::render('home', $data);
   }
+
+  public function login() {
+    echo Template::render('login');
+  }
+
+  public function register() {
+    echo Template::render('register');
+  }
 }

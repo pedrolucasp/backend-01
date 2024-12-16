@@ -1,13 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= $title ?? 'Dinheiro' ?></title>
-  </head>
+<section class="bg-white p-6 rounded-lg shadow-md">
+  <h1 class="text-xl font-semibold mb-4">
+    Bem vindo! <?= htmlspecialchars($appName) ?>!
+  </h1>
 
-  <body>
-    <h1>Bem vindo! <?= htmlspecialchars($appName) ?>!</h1>
-    <p><?= htmlspecialchars($message) ?></p>
-  </body>
-</html>
+  <p><?= htmlspecialchars($message) ?></p>
+
+  <div class="flex flex-col mt-5">
+    <a class="text-blue-700 underline font-bold hover:text-blue-800 focus:ring focus:ring-blue-300" href="/login">
+      Login
+    </a>
+
+    <a class="text-blue-700 underline font-bold hover:text-blue-800 focus:ring focus:ring-blue-300" href="/register">
+      Cadastro
+    </a>
+  </div>
+</section>
