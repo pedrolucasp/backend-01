@@ -8,9 +8,6 @@ services:
       - "8000:8000"
     volumes:
       - .:/var/www
-      - sqlite-data:/var/www/storage
+      - ./storage:/var/www/storage
     command: >
       sh -c "php -S 0.0.0.0:8000 -t public"
-
-volumes:
-  sqlite-data:
