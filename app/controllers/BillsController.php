@@ -13,6 +13,19 @@ class BillsController {
     $this->tagDAO = new TagDAO();
   }
 
+  public function index() {
+    $tags = $this->tagDAO->getAllTagsFromUser($_SESSION['user_id']);
+
+    $bills = $this->billDAO->getBillsByTagIdWithinRange(
+      $_SESSION['user_id'],
+      $_GET['tag_id'] ?? null ,
+      $_GET['start_date'] ?? null,
+      $_GET['end_date'] ?? null
+    );
+
+    return Template::render('bills', ['bills' => $bills, 'tags' => $tags]);
+  }
+
   public function create() {
     $tags = $this->tagDAO->getAllTagsFromUser($_SESSION['user_id']);
 

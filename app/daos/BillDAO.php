@@ -39,6 +39,62 @@ class BillDAO {
     return $bills;
   }
 
+  public function getBillsByTagIdWithinRange($userId, $tagId, $startDate, $endDate) {
+    $sql = 'SELECT b.*, GROUP_CONCAT(t.name, ", ") AS tags
+            FROM bills b
+            LEFT JOIN bill_tags bt ON b.id = bt.bill_id
+            LEFT JOIN tags t ON bt.tag_id = t.id
+            WHERE b.user_id = :user_id';
+
+    if ($tagId) {
+      $sql .= ' AND b.id IN (
+        SELECT bill_id FROM bill_tags WHERE tag_id = :tag_id
+      )';
+    }
+
+    if ($startDate) {
+      $sql .= ' AND b.due_date >= :start_date';
+    }
+
+    if ($endDate) {
+      $sql .= ' AND b.due_date <= :end_date';
+    }
+
+    $sql .= ' GROUP BY b.id ORDER BY b.due_date DESC';
+
+    $stmt = $this->db->prepare($sql);
+    if ($tagId) {
+      $stmt->bindValue(':tag_id', $tagId);
+    }
+
+    if ($startDate) {
+      $stmt->bindValue(':start_date', $startDate);
+    }
+
+    if ($endDate) {
+      $stmt->bindValue(':end_date', $endDate);
+    }
+
+    $stmt->bindValue(':user_id', $userId);
+    $stmt->execute();
+
+    $bills = [];
+
+    while ($billData = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $bills[] = new Bill(
+        $billData['id'],
+        $billData['title'],
+        $billData['amount'],
+        $billData['due_date'],
+        $billData['paid'],
+        $billData['user_id'],
+        $billData['tags']
+      );
+    }
+
+    return $bills;
+  }
+
   public function create(Bill $bill, $tagIds) {
     $this->db->beginTransaction();
 

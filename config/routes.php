@@ -8,7 +8,7 @@ require_once '../app/controllers/BillsController.php';
 require_once '../app/controllers/TagsController.php';
 
 return function() {
-  $uri = trim($_SERVER['REQUEST_URI'], '/');
+  $uri = explode('?', trim($_SERVER['REQUEST_URI'], '/'))[0];
   $method = $_SERVER['REQUEST_METHOD'];
 
   // TODO: Meio burro isso
@@ -34,6 +34,10 @@ return function() {
   // GET /dashboard
   } elseif ($uri === 'dashboard') {
     return (new DashboardController())->index();
+
+  // GET /bills
+  } elseif ($uri === 'bills' && $method === 'GET') {
+    return (new BillsController())->index();
 
   // GET /bills/create
   } elseif ($uri === 'bills/create' && $method === 'GET') {
