@@ -80,6 +80,70 @@ class BillDAO {
     }
   }
 
+  public function getBillById($id) {
+    $sql = 'SELECT * FROM bills WHERE id = :id';
+    $stmt = $this->db->prepare($sql);
+    $stmt->bindParam(':id', $id);
+    $stmt->execute();
+
+    $billData = $stmt->fetch(PDO::FETCH_OBJ);
+
+    if ($billData) {
+      return new Bill(
+        $billData->id,
+        $billData->title,
+        $billData->amount,
+        $billData->due_date,
+        $billData->paid,
+        $billData->user_id,
+        []
+      );
+    }
+  }
+
+  public function updateBill($id, $title, $amount, $due_date, $tags) {
+    $sql = 'UPDATE bills SET title = :title, amount = :amount, due_date = :due_date WHERE id = :id';
+    $stmt = $this->db->prepare($sql);
+    $stmt->bindParam(':title', $title);
+    $stmt->bindParam(':amount', $amount);
+    $stmt->bindParam(':due_date', $due_date);
+    $stmt->bindParam(':id', $id);
+    $stmt->execute();
+
+    $this->removeTagsFromBill($id);
+
+    foreach ($tags as $tagId) {
+      $this->addTagToBill($id, $tagId);
+    }
+  }
+
+  private function removeTagsFromBill($billId) {
+    $sql = 'DELETE FROM bill_tags WHERE bill_id = :bill_id';
+    $stmt = $this->db->prepare($sql);
+    $stmt->bindParam(':bill_id', $billId);
+    $stmt->execute();
+  }
+
+  private function addTagToBill($billId, $tagId) {
+    $sql = 'INSERT INTO bill_tags (bill_id, tag_id) VALUES (:bill_id, :tag_id)';
+    $stmt = $this->db->prepare($sql);
+    $stmt->bindParam(':bill_id', $billId);
+    $stmt->bindParam(':tag_id', $tagId);
+    $stmt->execute();
+  }
+
+  public function getTagsByBillId($billId) {
+    $sql = 'SELECT t.id, t.name
+      FROM tags t
+      JOIN bill_tags bt ON t.id = bt.tag_id
+      WHERE bt.bill_id = :bill_id';
+    $stmt = $this->db->prepare($sql);
+    $stmt->bindParam(':bill_id', $billId);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_OBJ);
+  }
+
   public function destroy($id) {
     $this->db->beginTransaction();
 

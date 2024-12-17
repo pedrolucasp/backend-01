@@ -14,7 +14,7 @@ class BillsController {
   }
 
   public function create() {
-    $tags = $this->tagDAO->getAllTags();
+    $tags = $this->tagDAO->getAllTagsFromUser($_SESSION['user_id']);
 
     return Template::render('bill_create', ['tags' => $tags]);
   }
@@ -38,11 +38,44 @@ class BillsController {
   }
 
   public function edit($id) {
-    // TODO: Implement edit method
+    $bill = $this->billDAO->getBillById($id);
+    $tags = $this->tagDAO->getAllTagsFromUser($_SESSION['user_id']);
+    $billTags = $this->billDAO->getTagsByBillId($id);
+
+    $tagIds = array_map(function($tag) {
+      return $tag->id;
+    }, $billTags);
+
+    if ($bill) {
+      return Template::render('bill_edit', [
+        'bill' => $bill,
+        'tags' => $tags,
+        'tagIds' => $tagIds
+      ]);
+    } else {
+      // TODO: Properly handle this shit
+      echo "Bill not found.";
+    }
   }
 
   public function update($id) {
-    // TODO: Implement update method
+    $data = $_POST;
+    $title = $data['title'];
+    $amount = $data['amount'];
+    $dueDate = $data['due_date'];
+    $tags = $data['tags'] ?? [];
+
+    if (empty($title) || empty($amount) || empty($dueDate)) {
+      // TODO: Flash messages
+      echo "All fields are required.";
+
+      return;
+    }
+
+    $this->billDAO->updateBill($id, $title, $amount, $dueDate, $tags);
+
+    header('Location: /dashboard');
+    exit;
   }
 
   public function destroy($id) {
