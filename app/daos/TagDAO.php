@@ -30,6 +30,21 @@ class TagDAO {
     }
   }
 
+  public function getTagById($id) {
+    $sql = 'SELECT * FROM tags WHERE id = :id';
+    $stmt = $this->db->prepare($sql);
+    $stmt->bindParam(':id', $id);
+    $stmt->execute();
+
+    $tagData = $stmt->fetch(PDO::FETCH_OBJ);
+
+    if ($tagData) {
+      return new Tag($tagData->id, $tagData->name);
+    } else {
+      return null;
+    }
+  }
+
   public function save(Tag $tag) {
     $sql = "INSERT INTO tags (name) VALUES (:name)";
     $stmt = $this->db->prepare($sql);
@@ -37,6 +52,16 @@ class TagDAO {
 
     $stmt->execute();
   }
+
+  public function updateTag($id, $name) {
+    $sql = 'UPDATE tags SET name = :name WHERE id = :id';
+    $stmt = $this->db->prepare($sql);
+    $stmt->bindParam(':name', $name);
+    $stmt->bindParam(':id', $id);
+
+    return $stmt->execute();
+  }
+
 
   public function delete($id) {
     $sql = "DELETE FROM tags WHERE id = :id";

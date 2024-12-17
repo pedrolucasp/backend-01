@@ -67,6 +67,14 @@ return function() {
   } elseif ($uri === 'tags/create' && $method === 'POST') {
     return (new TagsController())->store();
 
+  // GET /tags/edit/{id}
+  } elseif (preg_match('/^tags\/edit\/(\d+)$/', $uri, $matches) && $method === 'GET') {
+    return (new TagsController())->edit($matches[1]);
+
+  // POST /tags/edit/{id}
+  } elseif (preg_match('/^tags\/edit\/(\d+)$/', $uri, $matches) && $method === 'POST') {
+    return (new TagsController())->update($matches[1]);
+
   // GET /tags/delete/{id}
   } elseif (preg_match('/^tags\/delete\/(\d+)$/', $uri, $matches) && $method === 'GET') {
     return (new TagsController())->destroy($matches[1]);

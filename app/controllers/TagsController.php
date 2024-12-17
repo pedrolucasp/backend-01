@@ -33,6 +33,21 @@ class TagsController {
     exit;
   }
 
+  public function edit($id) {
+    $tag = $this->tagDAO->getTagById($id);
+
+    return Template::render('tag_edit', ['tag' => $tag]);
+  }
+
+  public function update($id) {
+    $data = $_POST;
+
+    $this->tagDAO->updateTag($id, $data['name']);
+
+    header('Location: /tags');
+    exit;
+  }
+
   public function destroy($id) {
     $this->tagDAO->delete($id);
 
