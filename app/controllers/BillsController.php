@@ -3,6 +3,7 @@
 require_once __DIR__ . '/../daos/BillDAO.php';
 require_once __DIR__ . '/../daos/TagDAO.php';
 require_once __DIR__ . '/../models/Bill.php';
+require_once __DIR__ . '/../services/FileUploadingService.php';
 
 class BillsController {
   private $billDAO;
@@ -36,15 +37,14 @@ class BillsController {
     $data = $_POST;
 
     $pdfPath = null;
-    if (isset($_FILES['pdf']) && $_FILES['pdf']['error'] === UPLOAD_ERR_OK) {
-      $uploadDir = '../storage/uploads/';
-      $fileName = uniqid() . '_' . basename($_FILES['pdf']['name']);
-      $pdfPath = $uploadDir . $fileName;
+    $fileUploadingService = new FileUploadingService();
+    $uploadResult = $fileUploadingService->upload($_FILES['pdf'], 'bill_');
 
-      if (!move_uploaded_file($_FILES['pdf']['tmp_name'], $pdfPath)) {
-        echo "Failed to upload PDF.";
-        return;
-      }
+    if ($uploadResult['success']) {
+      $pdfPath = $uploadResult['filePath'];
+    } elseif (isset($uploadResult['error'])) {
+      echo 'Error: ' . $uploadResult['error'];
+      return;
     }
 
     $bill = new Bill(
