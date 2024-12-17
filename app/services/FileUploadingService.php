@@ -1,5 +1,8 @@
 <?php
 
+// XXX: Probably could be renamed to FileManagerService instead, but I don't
+// have enough fucks to give right now.
+
 class FileUploadingService {
   const UPLOAD_DIR = __DIR__ . '/../../storage/uploads/';
   private $uploadDir;
@@ -32,6 +35,15 @@ class FileUploadingService {
     }
 
     return ['success' => false, 'error' => 'Failed to move the uploaded file.'];
+  }
+
+  public function deleteOldFile($filePath) {
+    $fullPath = __DIR__ . '/../../' . $filePath;
+
+    error_log("File exists: " . $fullPath);
+    if (file_exists($fullPath)) {
+      unlink($fullPath);
+    }
   }
 
   private function generateUniqueFileName($prefix, $extension) {
