@@ -34,6 +34,19 @@ class BillsController {
 
   public function store() {
     $data = $_POST;
+
+    $pdfPath = null;
+    if (isset($_FILES['pdf']) && $_FILES['pdf']['error'] === UPLOAD_ERR_OK) {
+      $uploadDir = '../storage/uploads/';
+      $fileName = uniqid() . '_' . basename($_FILES['pdf']['name']);
+      $pdfPath = $uploadDir . $fileName;
+
+      if (!move_uploaded_file($_FILES['pdf']['tmp_name'], $pdfPath)) {
+        echo "Failed to upload PDF.";
+        return;
+      }
+    }
+
     $bill = new Bill(
       null,
       $data['title'],
@@ -41,7 +54,8 @@ class BillsController {
       $data['due_date'],
       isset($data['paid']) ? true : false,
       $_SESSION['user_id'],
-      []
+      [],
+      $pdfPath
     );
 
     $this->billDAO->create($bill, $data['tags']);

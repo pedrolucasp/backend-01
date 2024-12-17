@@ -1,0 +1,1 @@
+ALTER TABLE bills ADD COLUMN pdf_path TEXT;

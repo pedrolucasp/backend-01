@@ -5,11 +5,12 @@ class Bill extends Base {
   private $amount;
   private $dueDate;
   private $paid;
+  private $pdfPath;
 
   private $userId;
   private $tags;
 
-  public function __construct($id, $title, $amount, $dueDate, $paid, $userId, $tags) {
+  public function __construct($id, $title, $amount, $dueDate, $paid, $userId, $tags, $pdfPath = null) {
     $this->id = $id;
     $this->title = $title;
     $this->amount = $amount;
@@ -17,6 +18,7 @@ class Bill extends Base {
     $this->paid = $paid;
     $this->userId = $userId;
     $this->tags = $tags;
+    $this->pdfPath = $pdfPath;
   }
 
   public function getTitle() {
@@ -57,6 +59,14 @@ class Bill extends Base {
 
   public function setTags($tags) {
     $this->tags = $tags;
+  }
+
+  public function getPdfPath() {
+    return $this->pdfPath;
+  }
+
+  public function setPdfPath($pdfPath) {
+    $this->pdfPath = $pdfPath;
   }
 
   public function toArray() {

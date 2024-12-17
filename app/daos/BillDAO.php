@@ -100,8 +100,8 @@ class BillDAO {
 
     try {
       $stmt = $this->db->prepare('
-        INSERT INTO bills (title, amount, due_date, paid, user_id)
-        VALUES (:title, :amount, :due_date, :paid, :user_id)
+        INSERT INTO bills (title, amount, due_date, paid, user_id, pdf_path)
+        VALUES (:title, :amount, :due_date, :paid, :user_id, :pdf_path)
       ');
 
       $stmt->bindValue(':title', $bill->getTitle());
@@ -109,6 +109,7 @@ class BillDAO {
       $stmt->bindValue(':due_date', $bill->getDueDate());
       $stmt->bindValue(':paid', $bill->isPaid());
       $stmt->bindValue(':user_id', $bill->getUserId());
+      $stmt->bindValue(':pdf_path', $bill->getPdfPath());
       $stmt->execute();
 
       $billId = $this->db->lastInsertId();
