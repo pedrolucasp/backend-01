@@ -15,6 +15,8 @@ return function() {
     return (new AuthController())->login();
   } elseif ($uri === 'login') {
     return (new HelloController())->login();
+  } elseif ($uri === 'register' && $method === 'POST') {
+    return (new AuthController())->register();
   } elseif ($uri === 'register') {
     return (new HelloController())->register();
   }

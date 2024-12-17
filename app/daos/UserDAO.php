@@ -30,4 +30,19 @@ class UserDAO {
 
     return null;
   }
+
+  public function create(User $user) {
+    $sql = 'INSERT INTO users (username, email, encrypted_password) VALUES (:username, :email, :encrypted_password)';
+
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->bindValue(':username', $user->getUserName());
+    $stmt->bindValue(':email', $user->getEmail());
+    $stmt->bindValue(':encrypted_password', $user->getEncryptedPassword());
+    $stmt->execute();
+
+    $user->setId($this->db->lastInsertId());
+
+    return $user;
+  }
 }

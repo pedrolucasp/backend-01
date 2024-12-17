@@ -18,4 +18,10 @@ class AuthService {
 
     return null;
   }
+
+  public function register($userName, $email, $password) {
+    $user = new User(null, $userName, $email, $password);
+
+    return $this->userDAO->create($user);
+  }
 }

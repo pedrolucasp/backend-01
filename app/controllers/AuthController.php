@@ -27,4 +27,36 @@ class AuthController {
       echo 'Usuário ou senha inválidos';
     }
   }
+
+  public function register() {
+    $email = $_POST['email'];
+    $userName = $_POST['username'];
+    $password = $_POST['password'];
+    $passwdConfirmation = $_POST['password_confirmation'];
+
+    if ($password != $passwdConfirmation) {
+      // TODO: Flash messages
+      echo 'As senhas não conferem';
+      return;
+    }
+
+    if (empty($email) || empty($password) || empty($userName)) {
+      throw new Exception("Email, username or password cannot be empty.");
+    }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+      throw new Exception("Invalid email format.");
+    }
+
+    $cryptographicPassword = password_hash($password, PASSWORD_DEFAULT);
+    $user = $this->authService->register($userName, $email, $cryptographicPassword);
+
+    if ($user) {
+      header('Location: /login');
+      exit();
+    } else {
+      // TODO: Flash messages
+      echo 'Erro ao cadastrar usuário';
+    }
+  }
 }
