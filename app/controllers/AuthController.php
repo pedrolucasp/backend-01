@@ -13,14 +13,17 @@ class AuthController {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    $cryptographicPassword = password_hash($password, PASSWORD_DEFAULT);
-
-    $user = $this->authService->login($email, $cryptographicPassword);
+    $sanitizedPassword = htmlspecialchars($password);
+    $user = $this->authService->login($email, $sanitizedPassword);
 
     if ($user) {
-      //$_SESSION['user_id'] = $user['id'];
-      echo 'Usuário logado com sucesso';
+      $_SESSION['user_id'] = $user->getId();
+      $_SESSION['user_email'] = $user->getEmail();
+
+      header('Location: /dashboard');
+      exit();
     } else {
+      // TODO: Flash messages
       echo 'Usuário ou senha inválidos';
     }
   }

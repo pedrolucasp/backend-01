@@ -22,9 +22,9 @@ class UserDAO {
     if ($userData) {
       return new User(
         $userData['id'],
-        $userData['name'],
+        $userData['username'],
         $userData['email'],
-        $userData['password']
+        $userData['encrypted_password']
       );
     }
 
