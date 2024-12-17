@@ -3,6 +3,7 @@
 // TODO: Usar um autoload aqui
 require_once '../app/controllers/HelloController.php';
 require_once '../app/controllers/AuthController.php';
+require_once '../app/controllers/DashboardController.php';
 
 return function() {
   $uri = trim($_SERVER['REQUEST_URI'], '/');
@@ -27,6 +28,10 @@ return function() {
   // GET /register
   } elseif ($uri === 'register') {
     return (new HelloController())->register();
+
+  // GET /dashboard
+  } elseif ($uri === 'dashboard') {
+    return (new DashboardController())->index();
 
   // GET /logout
   } elseif ($uri === 'logout') {
