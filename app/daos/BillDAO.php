@@ -11,7 +11,7 @@ class BillDAO {
   }
 
   public function findAllByUserId($userId) {
-    $sql = 'SELECT b.*, GROUP_CONCAT(t.name) AS tags
+    $sql = 'SELECT b.*, GROUP_CONCAT(t.name, ", ") AS tags
             FROM bills b
             LEFT JOIN bill_tags bt ON b.id = bt.bill_id
             LEFT JOIN tags t ON bt.tag_id = t.id
@@ -74,6 +74,25 @@ class BillDAO {
       $bill->setTags($tagIds);
 
       return $bill;
+    } catch (Exception $e) {
+      $this->db->rollBack();
+      throw $e;
+    }
+  }
+
+  public function destroy($id) {
+    $this->db->beginTransaction();
+
+    try {
+      $stmt = $this->db->prepare('DELETE FROM bills WHERE id = :id');
+      $stmt->bindParam(':id', $id);
+      $stmt->execute();
+
+      $stmt = $this->db->prepare('DELETE FROM bill_tags WHERE bill_id = :bill_id');
+      $stmt->bindParam(':bill_id', $id);
+      $stmt->execute();
+
+      $this->db->commit();
     } catch (Exception $e) {
       $this->db->rollBack();
       throw $e;

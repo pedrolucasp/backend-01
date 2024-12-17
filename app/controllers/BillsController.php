@@ -46,6 +46,9 @@ class BillsController {
   }
 
   public function destroy($id) {
-    // TODO: Implement destroy method
+    $this->billDAO->destroy($id);
+
+    header('Location: /dashboard');
+    exit;
   }
 }
