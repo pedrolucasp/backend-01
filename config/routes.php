@@ -11,14 +11,26 @@ return function() {
   // TODO: Meio burro isso
   if ($uri === '') {
     return (new HelloController())->index();
+
+  // POST /login
   } elseif ($uri === 'login' && $method === 'POST') {
     return (new AuthController())->login();
+
+  // GET /login
   } elseif ($uri === 'login') {
     return (new HelloController())->login();
+
+  // POST /register
   } elseif ($uri === 'register' && $method === 'POST') {
     return (new AuthController())->register();
+
+  // GET /register
   } elseif ($uri === 'register') {
     return (new HelloController())->register();
+
+  // GET /logout
+  } elseif ($uri === 'logout') {
+    return (new AuthController())->logout();
   }
 
   http_response_code(404);
