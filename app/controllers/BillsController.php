@@ -86,11 +86,17 @@ class BillsController {
   }
 
   public function update($id) {
+    $fileUploadingService = new FileUploadingService();
+    $bill = $this->billDAO->getBillById($id);
+
     $data = $_POST;
     $title = $data['title'];
     $amount = $data['amount'];
     $dueDate = $data['due_date'];
+    $paid = $data['paid'] ?? $bill->isPaid();
     $tags = $data['tags'] ?? [];
+    $pdfPath = $bill->getPdfPath();
+
 
     if (empty($title) || empty($amount) || empty($dueDate)) {
       // TODO: Flash messages
@@ -99,7 +105,30 @@ class BillsController {
       return;
     }
 
-    $this->billDAO->updateBill($id, $title, $amount, $dueDate, $tags);
+    if (!empty($_FILES['pdf']['name'])) {
+      if ($pdfPath && file_exists(__DIR__ . '/../../' . $pdfPath)) {
+        error_log("File exists: " . $pdfPath);
+        $fileUploadingService->deleteOldFile($pdfPath);
+      }
+
+      $uploadResult = $fileUploadingService->upload($_FILES['pdf'], 'bill_');
+
+      if ($uploadResult['success']) {
+        $pdfPath = $uploadResult['filePath'];
+      } elseif (isset($uploadResult['error'])) {
+        echo 'Error: ' . $uploadResult['error'];
+        throw new Exception('Error uploading file' . $uploadResult['error']);
+        return;
+      }
+    }
+
+    $bill->setTitle($title);
+    $bill->setAmount($amount);
+    $bill->setDueDate($dueDate);
+    $bill->setPaid($paid);
+    $bill->setPdfPath($pdfPath);
+
+    $this->billDAO->updateBill($bill, $tags);
 
     header('Location: /dashboard');
     exit;

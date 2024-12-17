@@ -153,24 +153,36 @@ class BillDAO {
         $billData->due_date,
         $billData->paid,
         $billData->user_id,
-        []
+        [],
+        $billData->pdf_path
       );
     }
   }
 
-  public function updateBill($id, $title, $amount, $due_date, $tags) {
-    $sql = 'UPDATE bills SET title = :title, amount = :amount, due_date = :due_date WHERE id = :id';
+  public function updateBill($bill, $tags) {
+    $sql = 'UPDATE bills
+      SET title = :title,
+          amount = :amount,
+          due_date = :due_date,
+          paid = :paid,
+          pdf_path = :pdf_path
+      WHERE id = :id';
+
     $stmt = $this->db->prepare($sql);
-    $stmt->bindParam(':title', $title);
-    $stmt->bindParam(':amount', $amount);
-    $stmt->bindParam(':due_date', $due_date);
-    $stmt->bindParam(':id', $id);
+    $stmt->bindValue(':id', $bill->getId());
+
+    $stmt->bindValue(':title', $bill->getTitle());
+    $stmt->bindValue(':amount', $bill->getAmount());
+    $stmt->bindValue(':due_date', $bill->getDueDate());
+    $stmt->bindValue(':paid', $bill->isPaid());
+    $stmt->bindValue(':pdf_path', $bill->getPdfPath());
+
     $stmt->execute();
 
-    $this->removeTagsFromBill($id);
+    $this->removeTagsFromBill($bill->getId());
 
     foreach ($tags as $tagId) {
-      $this->addTagToBill($id, $tagId);
+      $this->addTagToBill($bill->getId(), $tagId);
     }
   }
 

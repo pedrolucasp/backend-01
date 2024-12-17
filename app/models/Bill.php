@@ -37,6 +37,10 @@ class Bill extends Base {
     return $this->paid;
   }
 
+  public function setTitle($title) {
+    $this->title = $title;
+  }
+
   public function setAmount($amount) {
     $this->amount = $amount;
   }

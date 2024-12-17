@@ -1,7 +1,7 @@
 <div class="container mx-auto mt-10">
   <h1 class="text-2xl font-bold text-gray-700 mb-6">Editar Gasto</h1>
 
-  <form action="/bills/edit/<?= $bill->getId() ?>" method="POST">
+  <form action="/bills/edit/<?= $bill->getId() ?>" method="POST" enctype="multipart/form-data"  class="bg-white p-6 rounded shadow-md">
     <div class="mb-4">
       <label for="title" class="block text-sm font-medium text-gray-700">Título</label>
       <input type="text" id="title" name="title" value="<?= htmlspecialchars($bill->getTitle()) ?>"
@@ -31,6 +31,19 @@
         <?php endforeach; ?>
       </div>
     </div>
+
+    <div class="mb-4">
+      <label for="pdf" class="block text-sm font-medium text-gray-700">Anexar boleto</label>
+      <input type="file" id="pdf" name="pdf" class="mt-1 block w-full text-gray-700">
+    </div>
+
+    <div class="mb-4">
+      <label class="flex items-center text-sm font-medium text-gray-700">
+      <input type="checkbox" name="paid" class="mr-2" checked="<?= $bill->isPaid() ?>" />
+        Pago?
+      </label>
+    </div>
+
 
     <div class="flex items-center space-x-4">
       <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
