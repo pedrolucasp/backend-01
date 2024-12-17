@@ -11,7 +11,7 @@ class TagsController {
   }
 
   public function index() {
-    $tags = $this->tagDAO->getAllTags();
+    $tags = $this->tagDAO->getAllTagsFromUser($_SESSION['user_id']);
 
     return Template::render('tags', ['tags' => $tags]);
   }
@@ -24,7 +24,8 @@ class TagsController {
     $data = $_POST;
     $tag = new Tag(
       null,
-      $data['name']
+      $data['name'],
+      $_SESSION['user_id']
     );
 
     $this->tagDAO->save($tag);

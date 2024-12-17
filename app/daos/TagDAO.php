@@ -10,9 +10,10 @@ class TagDAO {
     $this->db = getDatabaseConnection();
   }
 
-  public function getAllTags() {
-    $sql = "SELECT id, name FROM tags";
+  public function getAllTagsFromUser($userId) {
+    $sql = 'SELECT * FROM tags WHERE user_id = :user_id';
     $stmt = $this->db->prepare($sql);
+    $stmt->bindParam(':user_id', $userId);
     $stmt->execute();
 
     $tagsData = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -21,7 +22,7 @@ class TagDAO {
       $tags = [];
 
       foreach ($tagsData as $tagData) {
-        $tags[] = new Tag($tagData['id'], $tagData['name']);
+        $tags[] = new Tag($tagData['id'], $tagData['name'], $tagData['user_id']);
       }
 
       return $tags;
@@ -39,16 +40,17 @@ class TagDAO {
     $tagData = $stmt->fetch(PDO::FETCH_OBJ);
 
     if ($tagData) {
-      return new Tag($tagData->id, $tagData->name);
+      return new Tag($tagData->id, $tagData->name, $tagData->user_id);
     } else {
       return null;
     }
   }
 
   public function save(Tag $tag) {
-    $sql = "INSERT INTO tags (name) VALUES (:name)";
+    $sql = "INSERT INTO tags (name, user_id) VALUES (:name, :user_id)";
     $stmt = $this->db->prepare($sql);
     $stmt->bindValue(':name', $tag->getName());
+    $stmt->bindValue(':user_id', $tag->getUserId());
 
     $stmt->execute();
   }
