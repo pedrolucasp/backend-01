@@ -1,14 +1,15 @@
 <?php
 
-class User {
-  private $id;
-  private $name;
+require_once __DIR__ . '/Base.php';
+
+class User extends Base {
+  private $userName;
   private $email;
   private $encryptedPassword;
 
-  public function __construct($id, $name, $email, $encryptedPassword) {
+  public function __construct($id, $userName, $email, $encryptedPassword) {
     $this->id = $id;
-    $this->name = $name;
+    $this->userName = $userName;
     $this->email = $email;
     $this->encryptedPassword = $encryptedPassword;
   }
@@ -21,11 +22,15 @@ class User {
     return $this->id;
   }
 
-  public function getName() {
-    return $this->name;
+  public function getUserName() {
+    return $this->userName;
   }
 
   public function getEmail() {
     return $this->email;
+  }
+
+  public function getEncryptedPassword() {
+    return $this->encryptedPassword;
   }
 }
