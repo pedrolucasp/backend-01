@@ -38,7 +38,7 @@
               <td class="py-3 px-6"><?= htmlspecialchars($bill->getTitle()) ?></td>
               <td class="py-3 px-6">$<?= number_format($bill->getAmount(), 2, '.', ',') ?></td>
               <td class="py-3 px-6"><?= date('d/m/Y', strtotime($bill->getDueDate())) ?></td>
-              <td class="py-3 px-6"><?= htmlspecialchars($bill->getTags()) ?></td>
+              <td class="py-3 px-6"><?= htmlspecialchars($bill->getTags() ?? '-') ?></td>
               <td class="py-3 px-6"><?= $bill->isPaid() ? 'Sim' : 'Não' ?></td>
               <td class="py-3 px-6 flex items-center space-x-2">
                 <a href="/bills/edit/<?= $bill->getId() ?>" class="text-yellow-600 hover:text-yellow-700">Editar</a>
