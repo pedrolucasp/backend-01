@@ -35,16 +35,18 @@ class BillsController {
 
   public function store() {
     $data = $_POST;
-
     $pdfPath = null;
-    $fileUploadingService = new FileUploadingService();
-    $uploadResult = $fileUploadingService->upload($_FILES['pdf'], 'bill_');
 
-    if ($uploadResult['success']) {
-      $pdfPath = $uploadResult['filePath'];
-    } elseif (isset($uploadResult['error'])) {
-      echo 'Error: ' . $uploadResult['error'];
-      return;
+    if (!empty($data['pdf'])) {
+      $fileUploadingService = new FileUploadingService();
+      $uploadResult = $fileUploadingService->upload($_FILES['pdf'], 'bill_');
+
+      if ($uploadResult['success']) {
+        $pdfPath = $uploadResult['filePath'];
+      } elseif (isset($uploadResult['error'])) {
+        echo 'Error: ' . $uploadResult['error'];
+        return;
+      }
     }
 
     $bill = new Bill(
@@ -58,7 +60,7 @@ class BillsController {
       $pdfPath
     );
 
-    $this->billDAO->create($bill, $data['tags']);
+    $this->billDAO->create($bill, $data['tags'] ?? []);
 
     header('Location: /dashboard');
     exit;
