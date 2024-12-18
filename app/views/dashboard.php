@@ -8,7 +8,7 @@
 
   <div class="balance-card bg-white p-6 mb-8 rounded-lg shadow-lg max-w-xs mx-auto">
     <h2 class="text-2xl font-semibold text-gray-800 mb-4">Balanço</h2>
-    <p class="text-4xl font-bold <?php echo ($balance > 0) ? 'text-blue-600' : 'text-red-600' ?> mb-2">$<?= number_format($balance, 2) ?></p>
+    <p class="text-4xl font-bold <?php echo ($balance > 0) ? 'text-green-600' : 'text-red-600' ?> mb-2">$<?= number_format($balance, 2) ?></p>
   </div>
 
   <?php if (empty($bills)) : ?>
