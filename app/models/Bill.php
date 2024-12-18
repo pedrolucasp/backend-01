@@ -21,6 +21,11 @@ class Bill extends Base {
     $this->pdfPath = $pdfPath;
   }
 
+  // TODO: Move this to use some sort of translation service instead
+  public function isPaidLabel() {
+    return $this->paid ? 'Sim' : 'Não';
+  }
+
   public function getTitle() {
     return $this->title;
   }

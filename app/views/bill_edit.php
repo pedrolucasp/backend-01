@@ -39,11 +39,10 @@
 
     <div class="mb-4">
       <label class="flex items-center text-sm font-medium text-gray-700">
-      <input type="checkbox" name="paid" class="mr-2" checked="<?= $bill->isPaid() ?>" />
+      <input type="checkbox" name="paid" class="mr-2" <?= ($bill->isPaid()) ? 'checked' : '' ?> />
         Pago?
       </label>
     </div>
-
 
     <div class="flex items-center space-x-4">
       <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
