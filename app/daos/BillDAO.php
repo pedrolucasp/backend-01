@@ -95,7 +95,7 @@ class BillDAO {
     return $bills;
   }
 
-  public function create(Bill $bill, $tagIds) {
+  public function create($bill, $tagIds) {
     $this->db->beginTransaction();
 
     try {
