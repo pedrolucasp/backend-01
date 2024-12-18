@@ -6,6 +6,7 @@ require_once '../app/controllers/AuthController.php';
 require_once '../app/controllers/DashboardController.php';
 require_once '../app/controllers/BillsController.php';
 require_once '../app/controllers/TagsController.php';
+require_once '../app/controllers/IncomesController.php';
 
 return function() {
   $uri = explode('?', trim($_SERVER['REQUEST_URI'], '/'))[0];
@@ -82,6 +83,30 @@ return function() {
   // GET /tags/delete/{id}
   } elseif (preg_match('/^tags\/delete\/(\d+)$/', $uri, $matches) && $method === 'GET') {
     return (new TagsController())->destroy($matches[1]);
+
+  // GET /incomes
+  } elseif ($uri === 'incomes' && $method === 'GET') {
+    return (new IncomesController())->index();
+
+  // GET /incomes/create
+  } elseif ($uri === 'incomes/create' && $method === 'GET') {
+    return (new IncomesController())->create();
+
+  // POST /incomes/create
+  } elseif ($uri === 'incomes/create' && $method === 'POST') {
+    return (new IncomesController())->store();
+
+  // GET /incomes/edit/{id}
+  } elseif (preg_match('/^incomes\/edit\/(\d+)$/', $uri, $matches) && $method === 'GET') {
+    return (new IncomesController())->edit($matches[1]);
+
+  // POST /incomes/edit/{id}
+  } elseif (preg_match('/^incomes\/edit\/(\d+)$/', $uri, $matches) && $method === 'POST') {
+    return (new IncomesController())->update($matches[1]);
+
+  // GET /incomes/delete/{id}
+  } elseif (preg_match('/^incomes\/delete\/(\d+)$/', $uri, $matches) && $method === 'GET') {
+    return (new IncomesController())->destroy($matches[1]);
 
   // GET /logout
   } elseif ($uri === 'logout') {

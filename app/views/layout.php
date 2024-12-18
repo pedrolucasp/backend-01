@@ -17,6 +17,7 @@
 
     <? if (isset($_SESSION['user_id'])): ?>
       <nav class="max-w-4xl mx-auto px-4 py-2">
+        <a href="/incomes" class="text-blue-700 mr-5">Rendimentos</a>
         <a href="/tags" class="text-blue-700 mr-5">Tags</a>
         <a href="/bills" class="text-blue-700 mr-5">Gastos</a>
         <a href="/logout" class="text-blue-700">Sair</a>
